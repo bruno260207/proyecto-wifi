@@ -1,0 +1,55 @@
+Punto,x,y,dbm_promedio,material_pared
+P1,0,0,-84,concreto(pasillo)
+P2,0,2,-83,concreto(pasillo)
+P3,0,4,-79,concreto(pasillo)
+P4,0,6,-73,concreto(pasillo)
+P5,0,8,-67,concreto(pasillo)
+P6,0,10,-54,concreto(pasillo)
+P7,0,12,-62,concreto(pasillo)
+P8,0,14,-60,concreto(pasillo)
+P9,0,16,-62,concreto(pasillo)
+P10,0,18,-67,concreto(pasillo)
+P11,0,20,-71,concreto(pasillo)
+P12,0,22,-86,concreto(pasillo)
+P13,2,0,-84,concreto(pasillo)
+P14,2,2,-80,concreto(pasillo)
+P15,2,4,-77,concreto(pasillo)
+P16,2,6,-73,concreto(pasillo)
+P17,2,8,-65,concreto(pasillo)
+P18,2,10,-60,concreto(pasillo)
+P19,2,12,-64,concreto(pasillo)
+P20,2,14,-66,concreto(pasillo)
+P21,2,16,-66,concreto(pasillo)
+P22,2,18,-66,concreto(pasillo)
+P23,2,20,-75,concreto(pasillo)
+P24,2,22,-78,concreto(pasillo)
+A1,-2,6,-51,concreto
+A2,-4,6,-53,concreto
+A3,-6,6,-48,concreto
+A4,-2,8,-48,concreto
+A5,-4,8,-45,concreto
+A6,-6,8,-44,concreto
+A7,-2,10,-43,concreto
+A8,-4,10,-46,concreto
+A9,-6,10,-40,concreto
+A10,-2,12,-40,concreto
+A11,-4,12,-47,concreto
+A12,-6,12,-44,concreto
+B1,-2,20,-79,concreto + casilleros de metal
+B2,-4,20,-74,concreto + casilleros de metal
+B3,-6,20,-86,concreto + casilleros de metal
+B4,-2,22,-90,concreto + casilleros de metal
+B5,-4,22,-90,concreto + casilleros de metal
+B6,-6,22,-79,concreto + casilleros de metal
+B7,-2,24,-90,concreto + casilleros de metal
+B8,-4,24,-90,concreto + casilleros de metal
+B9,-6,24,-90,concreto + casilleros de metal
+C1,4,14,-69,concreto
+C2,6,14,-75,concreto 
+C3,8,14,-68,concreto
+C4,4,16,-74,concreto
+C5,6,16,-76,concreto 
+C6,8,16,-85,concreto
+C7,4,18,-79,concreto
+C8,6,18,-82,concreto
+C9,8,18,-89,concreto
