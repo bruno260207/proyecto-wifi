@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conclusiones — WiFi FISI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/inicio">Inicio</a>
+    <a href="/heatmap">Heatmap</a>
+    <a href="/atenuacion">Atenuación</a>
+    <a href="/propagacion">Propagación</a>
+    <a href="/conclusiones">Conclusiones</a>
+  </nav>
+
+  <main class="container">
+    <h1>Conclusiones y recomendaciones</h1>
+
+    <section>
+      <h2>Zonas muertas identificadas</h2>
+      <p>
+        Se considera "zona muerta" todo punto con señal medida peor que -80 dBm,
+        umbral en el que la mayoría de dispositivos pierden conexión estable o
+        la velocidad cae drásticamente.
+      </p>
+      <ul id="lista-zonas-muertas">
+        <li>Cargando datos...</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Pérdida real vs valores de bibliografía</h2>
+      <p>
+        Comparamos la pérdida por atenuación que medimos en el pasillo con los
+        valores típicos reportados en literatura de propagación de señales en
+        interiores (indoor path loss), para materiales de construcción similares.
+      </p>
+      <table id="tabla-atenuacion">
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Pérdida medida (dB)</th>
+            <th>Pérdida típica en bibliografía (dB)</th>
+            <th>Diferencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4">Cargando datos...</td></tr>
+        </tbody>
+      </table>
+      <p class="nota">
+        Valores de referencia de bibliografía: concreto 12–15 dB, drywall/tabique
+        3–5 dB, vidrio 2–4 dB, madera 4–6 dB (rangos típicos para señales de 2.4 GHz).
+      </p>
+    </section>
+
+    <section>
+      <h2>Recomendación: ubicación de un Access Point adicional</h2>
+      <p id="recomendacion-ap">
+        Calculando recomendación a partir de los puntos con menor señal...
+      </p>
+    </section>
+
+    <section>
+      <h2>Reflexión final del equipo</h2>
+      <p>
+        Este proyecto nos permitió comprobar de forma práctica que la propagación
+        real de una señal WiFi en un ambiente cerrado se aleja bastante del modelo
+        teórico de espacio libre (FSPL). Las paredes, especialmente las de concreto,
+        introducen una atenuación considerable que la fórmula teórica no contempla,
+        ya que esta asume propagación sin obstáculos. Entender esta diferencia es
+        clave para diseñar redes WiFi eficientes en edificios: no basta con calcular
+        la distancia al router, hay que considerar los materiales que la señal debe
+        atravesar en el camino.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    // Referencia de bibliografía por material (valores típicos, rango medio)
+    const BIBLIOGRAFIA = {
+      "concreto": 13.5,
+      "drywall": 4,
+      "vidrio": 3,
+      "madera": 5
+    };
+
+    function buscarReferencia(material) {
+      const clave = material.toLowerCase();
+      for (const key in BIBLIOGRAFIA) {
+        if (clave.includes(key)) return BIBLIOGRAFIA[key];
+      }
+      return null;
+    }
+
+    // --- Zonas muertas a partir de /api/datos ---
+    fetch("/api/datos")
+      .then(res => res.json())
+      .then(datos => {
+        const lista = document.getElementById("lista-zonas-muertas");
+        lista.innerHTML = "";
+
+        if (datos.error) {
+          lista.innerHTML = `<li>${datos.error}</li>`;
+          return;
+        }
+
+        const zonasMuertas = datos.filter(p => p.dbm_medido < -80);
+
+        if (zonasMuertas.length === 0) {
+          lista.innerHTML = "<li>No se detectaron zonas muertas en las mediciones actuales.</li>";
+        } else {
+          zonasMuertas.forEach(p => {
+            const li = document.createElement("li");
+            li.textContent =
+              `${p.zona} (a ${p.distancia_router_m} m del router): ${p.dbm_medido} dBm — ` +
+              `causa probable: distancia elevada y/o obstáculos (paredes) entre el punto y el router.`;
+            lista.appendChild(li);
+          });
+        }
+
+        // --- Recomendación de AP adicional: punto más débil ---
+        const parrafoAP = document.getElementById("recomendacion-ap");
+        if (datos.length > 0) {
+          const peor = datos.reduce((a, b) => (a.dbm_medido < b.dbm_medido ? a : b));
+          parrafoAP.textContent =
+            `Se recomienda instalar un Access Point adicional cerca de "${peor.zona}" ` +
+            `(a ${peor.distancia_router_m} m del router principal, donde se midió ${peor.dbm_medido} dBm), ` +
+            `ya que es el punto con peor señal registrada. Un AP secundario en esa zona reduciría la ` +
+            `distancia efectiva que debe recorrer la señal y evitaría que los usuarios dependan de un ` +
+            `único emisor debilitado por las paredes intermedias.`;
+        }
+      })
+      .catch(() => {
+        document.getElementById("lista-zonas-muertas").innerHTML =
+          "<li>No se pudo cargar /api/datos. Verifica que app.py esté corriendo y que exista data/mediciones.csv.</li>";
+      });
+
+    // --- Tabla de atenuación a partir de /api/atenuacion ---
+    fetch("/api/atenuacion")
+      .then(res => res.json())
+      .then(datos => {
+        const tbody = document.querySelector("#tabla-atenuacion tbody");
+        tbody.innerHTML = "";
+
+        if (datos.error) {
+          tbody.innerHTML = `<tr><td colspan="4">${datos.error}</td></tr>`;
+          return;
+        }
+
+        datos.forEach(fila => {
+          const referencia = buscarReferencia(fila.material);
+          const diferencia = referencia !== null
+            ? (fila.perdida_db - referencia).toFixed(1)
+            : "N/D";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${fila.material}</td>
+            <td>${fila.perdida_db.toFixed ? fila.perdida_db.toFixed(1) : fila.perdida_db}</td>
+            <td>${referencia !== null ? referencia : "N/D"}</td>
+            <td>${diferencia}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(() => {
+        document.querySelector("#tabla-atenuacion tbody").innerHTML =
+          '<tr><td colspan="4">No se pudo cargar /api/atenuacion. Verifica que app.py esté corriendo y que exista data/atenuacion.csv.</td></tr>';
+      });
+  </script>
+
+</body>
+</html>
