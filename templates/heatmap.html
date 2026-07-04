@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis WiFi - Heatmap</title>
+    <link rel="stylesheet" href="/static/css/estilo.css">
+    <style>
+        .heatmap-wrapper {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+        }
+
+        .heatmap-container {
+            flex: 2;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .heatmap-container img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Tooltip que aparece al pasar el mouse */
+        .zone-tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid var(--primary-color);
+            color: var(--text-main);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 0 12px var(--primary-glow);
+            z-index: 10;
+        }
+
+        /* Zonas invisibles sobre el heatmap */
+        .zone-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .zone-area {
+            position: absolute;
+            cursor: crosshair;
+        }
+
+        /* Panel lateral de leyenda */
+        .legend-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .legend-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+        }
+
+        .legend-card h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .legend-text strong {
+            color: var(--text-main);
+        }
+
+        /* Barra de gradiente */
+        .gradient-bar {
+            width: 100%;
+            height: 16px;
+            border-radius: 8px;
+            background: linear-gradient(to right, #d73027, #fc8d59, #fee08b, #d9ef8b, #91cf60, #1a9850);
+            margin: 0.5rem 0;
+        }
+
+        .gradient-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Sección RSSI info */
+        .rssi-section {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(16px);
+            margin-bottom: 3rem;
+        }
+
+        .rssi-section h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .rssi-section p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        /* Zona activa resaltada */
+        .zone-area:hover ~ .zone-tooltip {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .heatmap-wrapper {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="/inicio">Inicio</a></li>
+            <li><a href="/heatmap" class="active">Heatmap</a></li>
+            <li><a href="/atenuacion">Atenuación</a></li>
+            <li><a href="/propagacion">Propagación</a></li>
+            <li><a href="/conclusiones">Conclusiones</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+
+        <!-- Título -->
+        <section class="hero-section">
+            <h1>Mapa de Calor — Distribución de señal WiFi</h1>
+            <p>
+                Visualización espacial de la intensidad de señal WiFi medida en 54 puntos 
+                del pabellón de la FISI. Pasa el cursor sobre el mapa para identificar cada zona.
+            </p>
+        </section>
+
+        <!-- Heatmap + Leyenda -->
+        <div class="heatmap-wrapper">
+
+            <!-- Imagen del heatmap con zonas interactivas -->
+            <div class="heatmap-container" id="heatmapContainer">
+                <img 
+                    src="/static/images/heatmap_fisi.png" 
+                    alt="Mapa de calor de señal WiFi en la FISI"
+                    id="heatmapImg"
+                >
+                <!-- Zonas invisibles sobre la imagen -->
+                <div class="zone-overlay">
+                    <!-- Coordenadas aproximadas en % sobre la imagen -->
+                    <!-- Pasillo izquierdo -->
+                    <div class="zone-area" 
+                         style="left:30%; top:5%; width:20%; height:90%"
+                         data-zona="Pasillo principal — señal media entre −54 y −86 dBm">
+                    </div>
+                    <!-- Aula A (router) -->
+                    <div class="zone-area"
+                         style="left:0%; top:30%; width:28%; height:35%"
+                         data-zona="Aula A — Router WiFi — señal excelente −40 a −53 dBm">
+                    </div>
+                    <!-- Aula B (casilleros) -->
+                    <div class="zone-area"
+                         style="left:0%; top:70%; width:28%; height:25%"
+                         data-zona="Aula B — Casilleros metálicos — zona muerta −74 a −90 dBm">
+                    </div>
+                    <!-- Aula C -->
+                    <div class="zone-area"
+                         style="left:55%; top:55%; width:30%; height:30%"
+                         data-zona="Aula C — señal débil −68 a −89 dBm">
+                    </div>
+                </div>
+                <!-- Tooltip -->
+                <div class="zone-tooltip" id="tooltip"></div>
+            </div>
+
+            <!-- Panel de leyenda -->
+            <div class="legend-panel">
+
+                <div class="legend-card">
+                    <h3>Escala de señal</h3>
+                    <div class="gradient-bar"></div>
+                    <div class="gradient-labels">
+                        <span>−90 dBm</span>
+                        <span>−65 dBm</span>
+                        <span>−40 dBm</span>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <h3>Referencia de colores</h3>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#1a9850"></div>
+                        <div class="legend-text">
+                            <strong>Verde — Excelente</strong><br>
+                            −40 a −55 dBm · Zona del router
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#fee08b"></div>
+                        <div class="legend-text">
+                            <strong>Amarillo — Media</strong><br>
+                            −55 a −70 dBm · Pasillo central
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#fc8d59"></div>
+                        <div class="legend-text">
+                            <strong>Naranja — Débil</strong><br>
+                            −70 a −80 dBm · Extremos del pasillo
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#d73027"></div>
+                        <div class="legend-text">
+                            <strong>Rojo — Zona muerta</strong><br>
+                            −80 a −90 dBm · Aula B (casilleros)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend-card">
+                    <h3>Zonas identificadas</h3>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#38bdf8"></div>
+                        <div class="legend-text"><strong>Aula A</strong> — Router WiFi</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#818cf8"></div>
+                        <div class="legend-text"><strong>Pasillo</strong> — 24 puntos medidos</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#f472b6"></div>
+                        <div class="legend-text"><strong>Aula B</strong> — Casilleros metálicos</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background:#fb923c"></div>
+                        <div class="legend-text"><strong>Aula C</strong> — Lado opuesto</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sección explicativa RSSI -->
+        <section class="rssi-section">
+            <h2>¿Qué es el RSSI y por qué varía?</h2>
+            <p>
+                El <strong style="color: var(--primary-color)">RSSI (Received Signal Strength Indicator)</strong> 
+                es una medida de la potencia de la señal WiFi que recibe un dispositivo, expresada en 
+                <strong style="color: var(--text-main)">dBm (decibeles-milivatio)</strong>. 
+                El valor siempre es negativo: cuanto más cercano a cero, más fuerte es la señal. 
+                Por ejemplo, −40 dBm es una señal excelente, mientras que −90 dBm es prácticamente 
+                inexistente para uso práctico.
+            </p>
+            <p>
+                La señal varía en el espacio porque las ondas electromagnéticas a 2.4 GHz interactúan 
+                con el entorno físico. La <strong style="color: var(--text-main)">distancia</strong> al 
+                router produce una caída natural de la señal siguiendo la ley de pérdida en espacio libre. 
+                Los <strong style="color: var(--text-main)">materiales de construcción</strong> como el 
+                concreto armado absorben parte de la energía de la onda al atravesarlos, reduciendo la 
+                señal entre 10 y 20 dB por pared. Los 
+                <strong style="color: var(--text-main)">obstáculos metálicos</strong> como los casilleros 
+                del Aula B actúan como barreras casi totales, reflejando y absorbiendo la señal hasta 
+                dejarla en niveles de −90 dBm.
+            </p>
+        </section>
+
+    </main>
+
+    <script>
+        const zones = document.querySelectorAll('.zone-area');
+        const tooltip = document.getElementById('tooltip');
+        const container = document.getElementById('heatmapContainer');
+
+        zones.forEach(zone => {
+            zone.addEventListener('mouseenter', (e) => {
+                tooltip.textContent = zone.dataset.zona;
+                tooltip.style.opacity = '1';
+            });
+
+            zone.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left + 12;
+                const y = e.clientY - rect.top + 12;
+                tooltip.style.left = x + 'px';
+                tooltip.style.top = y + 'px';
+            });
+
+            zone.addEventListener('mouseleave', () => {
+                tooltip.style.opacity = '0';
+            });
+        });
+    </script>
+
+</body>
+</html>
