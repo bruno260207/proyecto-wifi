@@ -58,18 +58,12 @@ def conclusiones():
 def api_datos():
     """
     Lee data/mediciones.csv y devuelve todos los puntos medidos en JSON.
-    Columnas esperadas en el CSV:
-      punto, zona, distancia_router_m, dbm_medido, dbm_teorico_fspl
-    Usada por: heatmap.html (opcional), propagacion.html, conclusiones.html
     """
     try:
         df = pd.read_csv(MEDICIONES_CSV)
-        # Ordenamos por distancia para que la gráfica de propagación salga prolija
-        df = df.sort_values("distancia_router_m")
         return jsonify(df.to_dict(orient="records"))
     except FileNotFoundError:
         return jsonify({"error": f"No se encontró {MEDICIONES_CSV}"}), 404
-
 
 @app.route("/api/atenuacion")
 def api_atenuacion():
