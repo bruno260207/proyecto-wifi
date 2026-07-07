@@ -1,4 +1,4 @@
 material,dbm_antes,dbm_despues
-Concreto (pared Aula A - lado del router),-46,-64
-Concreto (pared Aula C),-66,-77
-Concreto + casilleros metalicos (Aula B),-75,-85
+Concreto (pared Aula A hacia el pasillo),-46,-71
+Concreto + casilleros metalicos (Aula B),-71,-85
+Concreto x2 (Aula C - cruza el pasillo),-46,-77

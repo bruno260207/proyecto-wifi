@@ -42,6 +42,34 @@ function obtenerIlustracionSVG(nombreMaterial) {
     </svg>`;
 }
 
+// --- Mapeo de material -> foto real subida por el equipo ---
+function obtenerFotoMaterial(nombreMaterial) {
+    const texto = nombreMaterial.toLowerCase();
+    if (texto.includes('casillero') || texto.includes('metal')) {
+        return '/static/images/material_aula_b_casilleros.jpeg';
+    }
+    if (texto.includes('aula c')) {
+        return '/static/images/material_aula_c_concreto.jpeg';
+    }
+    return '/static/images/material_aula_a_concreto.jpeg'; // Aula A (default / router)
+}
+
+// --- Construye la tarjeta con efecto flip: SVG de frente, foto real al voltear ---
+function construirTarjetaMaterial(nombreMaterial) {
+    return `
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    ${obtenerIlustracionSVG(nombreMaterial)}
+                </div>
+                <div class="flip-card-back">
+                    <img src="${obtenerFotoMaterial(nombreMaterial)}" alt="${nombreMaterial}">
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         Chart.defaults.font.family = "'Inter', sans-serif";
@@ -85,10 +113,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const perdida = Number(fila.perdida_db).toFixed(1);
 
             panelContenido.innerHTML = `
-                <div style="display:flex; justify-content:center; margin-bottom:1rem;">
-                    ${obtenerIlustracionSVG(fila.material)}
+                <div style="display:flex; justify-content:center; margin-bottom:0.5rem;">
+                    ${construirTarjetaMaterial(fila.material)}
                 </div>
-                <div style="font-weight:600; color:var(--text-main); font-size:0.95rem; margin-bottom:0.5rem;">
+                <div style="font-weight:600; color:var(--text-main); font-size:0.95rem; margin-bottom:0.5rem; margin-top:0.75rem;">
                     ${fila.material}
                 </div>
                 <div style="color: var(--primary-color); font-weight:700; font-size:1.3rem;">
