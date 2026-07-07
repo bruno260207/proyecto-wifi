@@ -8,13 +8,15 @@
 </head>
 <body>
 
-  <nav class="navbar">
-    <a href="/inicio">Inicio</a>
-    <a href="/heatmap">Heatmap</a>
-    <a href="/atenuacion">Atenuación</a>
-    <a href="/propagacion">Propagación</a>
-    <a href="/conclusiones">Conclusiones</a>
-  </nav>
+<nav class="navbar">
+    <ul class="nav-links">
+        <li><a href="/inicio">Inicio</a></li>
+        <li><a href="/heatmap">Heatmap</a></li>
+        <li><a href="/atenuacion">Atenuación</a></li>
+        <li><a href="/propagacion">Propagación</a></li>
+        <li><a href="/conclusiones" class="active">Conclusiones</a></li>
+    </ul>
+</nav>
 
   <main class="container">
     <h1>Conclusiones y recomendaciones</h1>
@@ -38,7 +40,7 @@
         valores típicos reportados en literatura de propagación de señales en
         interiores (indoor path loss), para materiales de construcción similares.
       </p>
-      <table id="tabla-atenuacion">
+      <table class="data-table" id="tabla-atenuacion">
         <thead>
           <tr>
             <th>Material</th>
