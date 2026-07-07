@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +6,50 @@
     <title>Análisis WiFi - Atenuación</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos exclusivos de esta página (Atenuación) para la tarjeta con efecto flip.
+           No tocan estilo.css compartido, así que no afectan a las demás páginas. */
+        .flip-card {
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* mantiene proporción 4:3 como el SVG */
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+        .flip-card-front svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        .flip-card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
@@ -30,7 +74,7 @@
                 <code style="color: var(--primary-color); font-size: 1.2rem; font-weight: bold;">L (dB) = dBm_antes − dBm_después</code>
             </div>
             <p>
-                Para cuantificar este efecto en el pabellón de la FISI, comparamos la intensidad de señal (RSSI) medida justo antes y justo después de cruzar cada pared, usando puntos de la cuadrícula ubicados a ambos lados de cada muro. La diferencia entre ambos valores es la pérdida por inserción de ese material.
+                Para cuantificar este efecto en el pabellón de la FISI, comparamos la intensidad de señal (RSSI) promedio dentro de cada ambiente, tomando como referencia el Aula A —donde está ubicado el router— y observando cómo se degrada la señal al cruzar cada pared hacia el pasillo, el Aula B y el Aula C (esta última al otro lado del pasillo, por lo que la señal debe atravesar dos paredes de concreto para llegar). La diferencia entre ambos valores es la pérdida por inserción de ese material.
             </p>
         </section>
 
@@ -75,10 +119,13 @@
                     🧱 Análisis del Efecto de los Materiales
                 </h3>
                 <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1rem;">
-                    La pared de concreto que separa el Aula A (donde está ubicado el router) del pasillo introduce la mayor pérdida registrada, cercana a 18 dB, ya que es la primera barrera sólida que la señal debe atravesar. La pared hacia el Aula C, al ser un segundo muro de concreto más alejado del emisor, muestra una pérdida algo menor pero aun así considerable.
+                    El Aula A no tiene una fila propia de atenuación porque ahí está ubicado el router: su promedio de señal (−46 dBm) se usa como punto de referencia ("antes") para las demás comparaciones, en lugar de medir una pérdida sobre sí misma. La primera pared que la señal atraviesa realmente es la que separa el Aula A del pasillo, con una pérdida de concreto simple de aproximadamente 25 dB.
+                </p>
+                <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1rem;">
+                    El Aula B, con concreto y casilleros metálicos, agrega otros 14 dB adicionales sobre la señal.
                 </p>
                 <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem;">
-                    Un resultado interesante es el del Aula B: aunque combina concreto con casilleros metálicos —material que en teoría debería reflejar y bloquear más la señal por su alta conductividad—, la pérdida adicional medida en ese cruce es similar a la del concreto simple. Esto sugiere que gran parte de la degradación de señal en esa zona ya se explica por la distancia acumulada al router, y no únicamente por el material de la pared, lo cual también coincide con que el Aula B es la zona muerta detectada en el heatmap.
+                    El Aula C está al otro lado del pasillo, así que la señal del router debe cruzar <strong>dos</strong> paredes de concreto para llegar (la del Aula A y la propia del Aula C), lo que explica la mayor pérdida total registrada, cercana a 32 dB. Sin embargo, no es exactamente el doble de la pérdida de una sola pared (25 dB): la segunda pared solo añade unos 7 dB extra, lo que sugiere que buena parte de la atenuación ya ocurrió en la primera pared y en la distancia recorrida dentro del pasillo.
                 </p>
             </div>
         </section>
