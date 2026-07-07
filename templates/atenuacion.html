@@ -1,0 +1,90 @@
+<<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis WiFi - Atenuación</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="/inicio">Inicio</a></li>
+            <li><a href="/heatmap">Heatmap</a></li>
+            <li><a href="/atenuacion" class="active">Atenuación</a></li>
+            <li><a href="/propagacion">Propagación</a></li>
+            <li><a href="/conclusiones">Conclusiones</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+
+        <section class="hero-section" style="margin-bottom: 2rem;">
+            <h1>Atenuación de señal por materiales de construcción</h1>
+            <p>
+                Cuando una onda electromagnética atraviesa un material, parte de su energía es absorbida y disipada en forma de calor por las moléculas del medio. Este fenómeno se llama <strong>atenuación</strong>, y su magnitud depende de la densidad, el espesor y la composición del material: mientras más denso y conductor es el obstáculo, mayor es la pérdida de potencia que sufre la señal al atravesarlo.
+            </p>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid var(--border-color); text-align: center;">
+                <code style="color: var(--primary-color); font-size: 1.2rem; font-weight: bold;">L (dB) = dBm_antes − dBm_después</code>
+            </div>
+            <p>
+                Para cuantificar este efecto en el pabellón de la FISI, comparamos la intensidad de señal (RSSI) medida justo antes y justo después de cruzar cada pared, usando puntos de la cuadrícula ubicados a ambos lados de cada muro. La diferencia entre ambos valores es la pérdida por inserción de ese material.
+            </p>
+        </section>
+
+        <section style="background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); backdrop-filter: blur(12px); margin-bottom: 2.5rem;">
+            <h2 style="color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.5rem;">Pérdida de Señal por Material</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--text-muted);">
+                💡 Haz clic en una barra para ver el material.
+            </p>
+
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: stretch;">
+                <div style="flex: 2 1 400px; min-width: 280px;">
+                    <canvas id="graficaAtenuacion"></canvas>
+                </div>
+
+                <div id="panelMaterial" style="flex: 1 1 220px; min-width: 220px; background: rgba(0,0,0,0.25); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: opacity 0.3s ease;">
+                    <div id="panelMaterialVacio" style="color: var(--text-muted); font-size: 0.9rem;">
+                        👆 Selecciona una barra para ver el material aquí
+                    </div>
+                    <div id="panelMaterialContenido" style="display: none; width: 100%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-bottom: 3rem;">
+            <h2 style="color: var(--primary-color); margin-bottom: 1rem; font-size: 1.5rem;">Datos Medidos por Material</h2>
+
+            <table class="data-table" id="tablaAtenuacion">
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>dBm antes</th>
+                        <th>dBm después</th>
+                        <th>Pérdida (dB)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-left: 4px solid var(--primary-color); border-radius: 0 12px 12px 0; backdrop-filter: blur(12px); border-top: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);">
+                <h3 style="color: var(--primary-color); margin-bottom: 0.75rem; font-size: 1.2rem; font-weight: 600;">
+                    🧱 Análisis del Efecto de los Materiales
+                </h3>
+                <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1rem;">
+                    La pared de concreto que separa el Aula A (donde está ubicado el router) del pasillo introduce la mayor pérdida registrada, cercana a 18 dB, ya que es la primera barrera sólida que la señal debe atravesar. La pared hacia el Aula C, al ser un segundo muro de concreto más alejado del emisor, muestra una pérdida algo menor pero aun así considerable.
+                </p>
+                <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem;">
+                    Un resultado interesante es el del Aula B: aunque combina concreto con casilleros metálicos —material que en teoría debería reflejar y bloquear más la señal por su alta conductividad—, la pérdida adicional medida en ese cruce es similar a la del concreto simple. Esto sugiere que gran parte de la degradación de señal en esa zona ya se explica por la distancia acumulada al router, y no únicamente por el material de la pared, lo cual también coincide con que el Aula B es la zona muerta detectada en el heatmap.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/atenuacion.js') }}"></script>
+</body>
+</html>
