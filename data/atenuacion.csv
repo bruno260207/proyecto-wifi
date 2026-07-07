@@ -1,4 +1,4 @@
 material,dbm_antes,dbm_despues
 Concreto (pared Aula A hacia el pasillo),-46,-71
-Concreto + casilleros metalicos (Aula B),-71,-85
-Concreto x2 (Aula C - cruza el pasillo),-46,-77
+Concreto + casilleros metalicos (Aula A a Aula B - vecinas),-46,-85
+Concreto x2 (Aula A a Aula C - cruza el pasillo),-46,-77

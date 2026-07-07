@@ -74,7 +74,7 @@
                 <code style="color: var(--primary-color); font-size: 1.2rem; font-weight: bold;">L (dB) = dBm_antes − dBm_después</code>
             </div>
             <p>
-                Para cuantificar este efecto en el pabellón de la FISI, comparamos la intensidad de señal (RSSI) promedio dentro de cada ambiente, tomando como referencia el Aula A —donde está ubicado el router— y observando cómo se degrada la señal al cruzar cada pared hacia el pasillo, el Aula B y el Aula C (esta última al otro lado del pasillo, por lo que la señal debe atravesar dos paredes de concreto para llegar). La diferencia entre ambos valores es la pérdida por inserción de ese material.
+                Para cuantificar este efecto en el pabellón de la FISI, comparamos la intensidad de señal (RSSI) promedio dentro de cada ambiente, tomando como referencia el Aula A —donde está ubicado el router— y observando cómo se degrada la señal en tres trayectos distintos: hacia el pasillo (una sola pared de concreto), hacia el Aula B, que es la habitación vecina y comparte pared directamente con el Aula A (concreto + casilleros metálicos), y hacia el Aula C, ubicada justo enfrente del Aula A al otro lado del pasillo, por lo que la señal debe atravesar dos paredes de concreto para llegar. La diferencia entre ambos valores es la pérdida por inserción de cada material.
             </p>
         </section>
 
@@ -122,10 +122,10 @@
                     El Aula A no tiene una fila propia de atenuación porque ahí está ubicado el router: su promedio de señal (−46 dBm) se usa como punto de referencia ("antes") para las demás comparaciones, en lugar de medir una pérdida sobre sí misma. La primera pared que la señal atraviesa realmente es la que separa el Aula A del pasillo, con una pérdida de concreto simple de aproximadamente 25 dB.
                 </p>
                 <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 1rem;">
-                    El Aula B, con concreto y casilleros metálicos, agrega otros 14 dB adicionales sobre la señal.
+                    El Aula B es la habitación vecina del Aula A: comparten pared directamente, así que la señal del router llega a ella cruzando una sola pared, pero compuesta de concreto y casilleros metálicos. Ese material combinado introduce la mayor pérdida de todo el estudio, cercana a 40 dB, muy por encima de la pared de concreto simple hacia el pasillo (25 dB). Esto confirma que el metal de los casilleros —al ser conductor— refleja y bloquea la señal mucho más que el concreto solo, y explica por qué el Aula B es la zona muerta detectada en el heatmap.
                 </p>
                 <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem;">
-                    El Aula C está al otro lado del pasillo, así que la señal del router debe cruzar <strong>dos</strong> paredes de concreto para llegar (la del Aula A y la propia del Aula C), lo que explica la mayor pérdida total registrada, cercana a 32 dB. Sin embargo, no es exactamente el doble de la pérdida de una sola pared (25 dB): la segunda pared solo añade unos 7 dB extra, lo que sugiere que buena parte de la atenuación ya ocurrió en la primera pared y en la distancia recorrida dentro del pasillo.
+                    El Aula C está ubicada justo enfrente del Aula A, cruzando el pasillo, así que la señal debe atravesar <strong>dos</strong> paredes de concreto para llegar (la del Aula A y la propia del Aula C). Esto da una pérdida total cercana a 32 dB. Curiosamente, es menor que la pérdida hacia el Aula B (40 dB) a pesar de cruzar dos paredes en vez de una, lo que confirma que el material importa más que la cantidad de paredes: dos muros de concreto simple atenúan menos que un solo muro reforzado con metal.
                 </p>
             </div>
         </section>
