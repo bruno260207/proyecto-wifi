@@ -1,55 +1,55 @@
-Punto,x,y,dbm_promedio,material_pared
-P1,0,0,-84,concreto(pasillo)
-P2,0,2,-83,concreto(pasillo)
-P3,0,4,-79,concreto(pasillo)
-P4,0,6,-73,concreto(pasillo)
-P5,0,8,-67,concreto(pasillo)
-P6,0,10,-54,concreto(pasillo)
-P7,0,12,-62,concreto(pasillo)
-P8,0,14,-60,concreto(pasillo)
-P9,0,16,-62,concreto(pasillo)
-P10,0,18,-67,concreto(pasillo)
-P11,0,20,-71,concreto(pasillo)
-P12,0,22,-86,concreto(pasillo)
-P13,2,0,-84,concreto(pasillo)
-P14,2,2,-80,concreto(pasillo)
-P15,2,4,-77,concreto(pasillo)
-P16,2,6,-73,concreto(pasillo)
-P17,2,8,-65,concreto(pasillo)
-P18,2,10,-60,concreto(pasillo)
-P19,2,12,-64,concreto(pasillo)
-P20,2,14,-66,concreto(pasillo)
-P21,2,16,-66,concreto(pasillo)
-P22,2,18,-66,concreto(pasillo)
-P23,2,20,-75,concreto(pasillo)
-P24,2,22,-78,concreto(pasillo)
-A1,-2,6,-51,concreto
-A2,-4,6,-53,concreto
-A3,-6,6,-48,concreto
-A4,-2,8,-48,concreto
-A5,-4,8,-45,concreto
-A6,-6,8,-44,concreto
-A7,-2,10,-43,concreto
-A8,-4,10,-46,concreto
-A9,-6,10,-40,concreto
-A10,-2,12,-40,concreto
-A11,-4,12,-47,concreto
-A12,-6,12,-44,concreto
-B1,-2,20,-79,concreto + casilleros de metal
-B2,-4,20,-74,concreto + casilleros de metal
-B3,-6,20,-86,concreto + casilleros de metal
-B4,-2,22,-90,concreto + casilleros de metal
-B5,-4,22,-90,concreto + casilleros de metal
-B6,-6,22,-79,concreto + casilleros de metal
-B7,-2,24,-90,concreto + casilleros de metal
-B8,-4,24,-90,concreto + casilleros de metal
-B9,-6,24,-90,concreto + casilleros de metal
-C1,4,14,-69,concreto
-C2,6,14,-75,concreto 
-C3,8,14,-68,concreto
-C4,4,16,-74,concreto
-C5,6,16,-76,concreto 
-C6,8,16,-85,concreto
-C7,4,18,-79,concreto
-C8,6,18,-82,concreto
-C9,8,18,-89,concreto
+punto,zona,distancia_router_m,dbm_medido,dbm_teorico_fspl
+A8,Aula A (router),0.0,-46,-60.0
+A5,Aula A (router),2.0,-45,-66.1
+A7,Aula A (router),2.0,-43,-66.1
+A9,Aula A (router),2.0,-40,-66.1
+A11,Aula A (router),2.0,-47,-66.1
+A10,Aula A (router),2.83,-40,-69.1
+A6,Aula A (router),2.83,-44,-69.1
+A4,Aula A (router),2.83,-48,-69.1
+A12,Aula A (router),2.83,-44,-69.1
+P6,Pasillo,4.0,-54,-72.1
+A2,Aula A (router),4.0,-53,-72.1
+P5,Pasillo,4.47,-67,-73.1
+A3,Aula A (router),4.47,-48,-73.1
+A1,Aula A (router),4.47,-51,-73.1
+P7,Pasillo,4.47,-62,-73.1
+P4,Pasillo,5.66,-73,-75.1
+P8,Pasillo,5.66,-60,-75.1
+P18,Pasillo,6.0,-60,-75.6
+P17,Pasillo,6.32,-65,-76.1
+P19,Pasillo,6.32,-64,-76.1
+P9,Pasillo,7.21,-62,-77.2
+P16,Pasillo,7.21,-73,-77.2
+P3,Pasillo,7.21,-79,-77.2
+P20,Pasillo,7.21,-66,-77.2
+P21,Pasillo,8.49,-66,-78.6
+P15,Pasillo,8.49,-77,-78.6
+P2,Pasillo,8.94,-83,-79.1
+C1,Aula C,8.94,-69,-79.1
+P10,Pasillo,8.94,-67,-79.1
+P14,Pasillo,10.0,-80,-80.0
+B2,Aula B (casilleros),10.0,-74,-80.0
+P22,Pasillo,10.0,-66,-80.0
+C4,Aula C,10.0,-74,-80.0
+B3,Aula B (casilleros),10.2,-86,-80.2
+B1,Aula B (casilleros),10.2,-79,-80.2
+C2,Aula C,10.77,-75,-80.7
+P1,Pasillo,10.77,-84,-80.7
+P11,Pasillo,10.77,-71,-80.7
+C7,Aula C,11.31,-79,-81.1
+P23,Pasillo,11.66,-75,-81.4
+P13,Pasillo,11.66,-84,-81.4
+C5,Aula C,11.66,-76,-81.4
+B5,Aula B (casilleros),12.0,-90,-81.6
+B4,Aula B (casilleros),12.17,-90,-81.8
+B6,Aula B (casilleros),12.17,-79,-81.8
+P12,Pasillo,12.65,-86,-82.1
+C3,Aula C,12.65,-68,-82.1
+C8,Aula C,12.81,-82,-82.2
+P24,Pasillo,13.42,-78,-82.6
+C6,Aula C,13.42,-85,-82.6
+B8,Aula B (casilleros),14.0,-90,-83.0
+B7,Aula B (casilleros),14.14,-90,-83.1
+B9,Aula B (casilleros),14.14,-90,-83.1
+C9,Aula C,14.42,-89,-83.2
